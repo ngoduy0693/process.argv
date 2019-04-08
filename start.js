@@ -1,9 +1,11 @@
 var calculation = require('./calculation.js');
 
 class Calculator {
+
     constructor() {
         this.operators = {};
     }
+
     calculate(operator, numberA, numberB) {
 		return this.operators[operator].operate(numberA, numberB);
 	}

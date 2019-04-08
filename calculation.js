@@ -26,10 +26,12 @@ class Div {
 		
 	}
 }
+
 var calculation = {
     add : Add,
     sub : Sub,
     mul : Mul,
     div : Div
 }
+
 module.exports = calculation;
