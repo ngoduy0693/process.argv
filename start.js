@@ -1,25 +1,40 @@
-var calculation = require('./calculation.js');
+const Koa = require('koa');
+const app = new Koa();
 
-class Calculator {
+const Calculator = require('./calculation.js');
+const calculator = new  Calculator();
 
-    constructor() {
-        this.operators = {};
+const numberFilterMiddleware = async (context, next) => {
+    const numberA = context.query.numberA;
+    const numberB = context.query.numberA;
+    const operate = context.query.operate;
+    if (numberA, numberB, operate) {
+        await next();
+    } else {
+        context.body = {
+            Calculator : 'Missing value!'
+        }
     }
+};
 
-    calculate(operator, numberA, numberB) {
-		return this.operators[operator].operate(numberA, numberB);
-	}
+const opFilterMiddleware = async (context) => {
+    const numberA  = parseInt(context.query.numberA);
+    const numberB  = parseInt(context.query.numberB);
+    const operate  = context.query.operate;
 
-	registerOpertator(operatorName, operator) {
-        this.operators[operatorName] = operator;
+    if (!calculator.operators.hasOwnProperty(operate)) {
+        context.body = {
+            Result : 'Not support!'
+        }
+    } else {
+        let result   = calculator.do(operate, numberA, numberB);
+        context.body = {
+            Result : numberA + ' ' + operate + ' ' + numberB + ' = ' + result
+        }
     }
 }
 
-const calculator = new Calculator();
+app.use(numberFilterMiddleware);
+app.use(opFilterMiddleware);
 
-calculator.registerOpertator('+', new calculation.add);
-calculator.registerOpertator('-', new calculation.sub);
-calculator.registerOpertator('x', new calculation.mul);
-calculator.registerOpertator('/', new calculation.div);
-
-console.log(calculator.calculate(process.argv[2],process.argv[3],process.argv[4]));
+app.listen(4001);
